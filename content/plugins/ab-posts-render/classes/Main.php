@@ -22,7 +22,8 @@ class Main {
 
 	protected function init() {
 		add_action( 'init', [ $this, 'init_translations' ] );
-		add_action( 'the_post', [ $this, 'the_post' ] );
+		remove_action( 'wp_head', '_wp_render_title_tag', 1 );
+		add_action( 'wp_head', [ $this, 'render_title' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_script' ] );
 	}
 
@@ -49,19 +50,86 @@ class Main {
 		load_plugin_textdomain( 'ab-posts-render', false, AB_POSTS_RENDER_PLUGIN_DIRNAME . '/languages' );
 	}
 
+
 	/**
-	 * make the post loads 5 random linked posts
-	 *
-	 * @param $post_object
+	 * updates the pages title by setting the post_title in the global $post
 	 */
-	public function the_post( $post_object ) {
+	function render_title() {
+		global $post;
+		$title_alternatives = get_field( 'alternative_titles' );
 
-		return $post_object;
+
+		if ( ! empty( $title_alternatives ) ) {
+			$printed_title = $this->get_printed_title( $title_alternatives, $post->post_title );
+
+			$this->print_title( $printed_title );
+			$post->post_title = esc_html( $printed_title );
+		} else {
+			$this->print_title( $post->post_title );
+		}
 	}
 
-	private function render_pagination() {
-		return '';
+	/**
+	 * verify the url parameters and the alternatives of the post title
+	 * and decide which title to print
+	 *
+	 * @param $title_alternatives
+	 * @param $post_title original post_title
+	 *
+	 * scenarios with the url "titre" param :
+	 * titre = 1    => post_title
+	 * titre = 0|>5 => random
+	 * titre = null => random
+	 * titre = 3 (if titre 3 is empty in db) => random
+	 * titre = 2    => get acf field title_2
+	 *
+	 * @return string title to print
+	 */
+	private function get_printed_title( $title_alternatives, $post_title ) {
+		$alternative_titles_values = array_values( $title_alternatives );
+		if ( ! empty( $_GET['titre'] ) ) {
+			if ( $_GET['titre'] == 1 ) {
+				return $post_title;
+			} else {
+				$title_index = array_search( 'title_' . $_GET['titre'], array_keys( $title_alternatives ) );
+
+				if ( $title_index === false || empty( array_values( $title_alternatives )[ $title_index ] ) ) {
+					return $this->get_random_title( array_filter( $alternative_titles_values ), $post_title );
+				} else {
+					return $alternative_titles_values[ $title_index ];
+				}
+			}
+		} else {
+			return $this->get_random_title( array_filter( $alternative_titles_values ), $post_title );
+		}
 	}
 
+	/**
+	 * from a list of titles return a random one
+	 *
+	 * @param $alternative_titles all alternative titles
+	 * @param string $post_title original post title
+	 *
+	 * @return string post title
+	 */
+	private function get_random_title( $alternative_titles, $post_title = '' ) {
+		$titles = array_values( $alternative_titles );
+		if ( ! empty( $post_title ) ) {
+			$titles[] = $post_title;
+		}
+
+		return $titles[ rand( 0, sizeof( $titles ) - 1 ) ];
+	}
+
+	/**
+	 * echo the html title tag with the wanted title
+	 *
+	 * @param $title to print
+	 */
+	private function print_title( $title ) {
+		if ( did_action( 'wp_head' ) || doing_action( 'wp_head' ) ) {
+			echo '<title>' . esc_html( $title ) . '</title>' . "\n";
+		}
+	}
 
 }

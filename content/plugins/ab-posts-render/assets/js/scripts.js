@@ -5,7 +5,7 @@ jQuery(document).ready(function ($) {
    * @param {string} v - The version of the template.
    */
   function appendFakeAds (v = 1) {
-    
+
     /**
      * generate HTML markup to insert into the page
      * @param {string} {v1, v2 or v3} - The version of the template.
@@ -99,7 +99,6 @@ jQuery(document).ready(function ($) {
 
     }
 
-
     /*
     * add behavior for the v1 ad template
     */
@@ -113,6 +112,7 @@ jQuery(document).ready(function ($) {
         $('#v1Ad').hide('slow')
       })
     }
+
     /*
     * add behavior for the v2 ad template
     */
@@ -142,6 +142,7 @@ jQuery(document).ready(function ($) {
 
       })
     }
+
     /*
     * add behavior for the v3 ad template
     */
@@ -156,22 +157,20 @@ jQuery(document).ready(function ($) {
     }
 
     switch (v) {
-      case "1" : {
+      case '1' : {
         handleAdV1()
-        break;
+        break
       }
-      case "2" : {
+      case '2' : {
         handleAdV2()
-        break;
+        break
       }
-      case "3" : {
+      case '3' : {
         handleAdV3()
-        break;
+        break
       }
     }
   }
-
-
 
   // our code here
   const queryString = window.location.search

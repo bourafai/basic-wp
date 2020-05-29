@@ -406,7 +406,9 @@ content/plugins/sf-move-login
 # END sf-move-login #
 
 
-
+# BEGIN cms-tree-page-view #
+content/plugins/advanced-custom-fields
+# END cms-tree-page-view #
 
 # BEGIN cms-tree-page-view #
 content/plugins/cms-tree-page-view

@@ -50,6 +50,7 @@
         "roots/wp-password-bcrypt": "*@stable"
     },
     "require-dev": {
+        "wpackagist-plugin/advanced-custom-fields":"5.8.11",
         "beapi/composer-scaffold-theme": "dev-master",
         "wpackagist-plugin/debug": "*@stable",
         "wpackagist-plugin/debug-bar": "*@stable",

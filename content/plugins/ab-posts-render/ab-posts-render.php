@@ -54,13 +54,12 @@ if ( version_compare( PHP_VERSION, AB_POSTS_RENDER_MIN_PHP_VERSION, '<' ) ) {
 	return;
 }
 
-require_once AB_POSTS_RENDER_DIR.'classes/Main.php';
-require_once AB_POSTS_RENDER_DIR.'classes/Admin/Main.php';
+require_once AB_POSTS_RENDER_DIR . 'classes/Main.php';
+require_once AB_POSTS_RENDER_DIR . 'classes/Admin/Main.php';
 
 // Plugin activate/deactivate hooks
 register_activation_hook( __FILE__, array( '\AB\Posts_Render\Plugin', 'activate' ) );
 register_deactivation_hook( __FILE__, array( '\AB\Posts_Render\Plugin', 'deactivate' ) );
-
 
 
 add_action( 'plugins_loaded', 'init_ab_posts_render_plugin' );
