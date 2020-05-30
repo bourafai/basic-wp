@@ -2,6 +2,7 @@
 
 namespace AB\Posts_Render;
 require_once AB_POSTS_RENDER_DIR . 'classes/Singleton.php';
+require_once AB_POSTS_RENDER_DIR . 'classes/Helpers.php';
 
 
 /**
@@ -22,15 +23,17 @@ class Main {
 	use Singleton;
 
 	protected function init() {
+		remove_action( 'wp_head', '_wp_render_title_tag', 1 );
+
 		add_action( 'init', [ $this, 'ab_init' ] );
 		add_action( 'wp_logout', [ $this, 'wp_logout' ] );
-		remove_action( 'wp_head', '_wp_render_title_tag', 1 );
+
 		add_action( 'wp_head', [ $this, 'render_title' ] );
+		add_action( 'get_footer', [ $this, 'get_footer' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_script' ] );
 
 		add_filter( 'next_post_link', [ $this, 'adjacent_post_link' ], 10, 5 );
 		add_filter( 'previous_post_link', [ $this, 'adjacent_post_link' ], 10, 5 );
-//		add_filter( 'navigation_markup_template', [ $this, 'navigation_markup_template' ], 10, 2 );
 	}
 
 	public function enqueue_script() {
@@ -226,9 +229,15 @@ class Main {
 
 			return preg_replace( '/href=".*?"/', 'href="' . esc_url( $adjacent_post_link ) . '"', $output );
 		}
+	}
 
-		//replace default URL
-
+	/**
+	 * add related posts section to all single templates
+	 */
+	public function get_footer() {
+		if ( is_single() ) {
+			return Helpers::render( 'related-posts' );
+		}
 	}
 
 }

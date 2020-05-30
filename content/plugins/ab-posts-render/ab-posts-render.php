@@ -62,7 +62,6 @@ register_activation_hook( __FILE__, array( '\AB\Posts_Render\Plugin', 'activate'
 register_deactivation_hook( __FILE__, array( '\AB\Posts_Render\Plugin', 'deactivate' ) );
 
 
-
 add_action( 'plugins_loaded', 'init_ab_posts_render_plugin' );
 /**
  * Init the plugin
