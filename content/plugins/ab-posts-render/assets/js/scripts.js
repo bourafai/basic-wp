@@ -5,6 +5,7 @@ jQuery(document).ready(function ($) {
    * @param {string} v - The version of the template.
    */
   function appendFakeAds (v = 1) {
+    let appended = false
 
     /**
      * generate HTML markup to insert into the page
@@ -34,6 +35,7 @@ jQuery(document).ready(function ($) {
       
       .sidebar{
         float: right;
+        height:0px;
         width: 300px;
         color: #ce8888;
         position: relative;
@@ -58,6 +60,7 @@ jQuery(document).ready(function ($) {
       if (type == 'v2') {
         return `
       <style>
+      
       .sticky-ad.sticky-ad_bottom {
           top: unset;
           bottom: 0px !important;
@@ -72,7 +75,7 @@ jQuery(document).ready(function ($) {
       }
       
       </style>
-      <div class="ad ${type} ${cssClass}" id="${type}Ad"><img class="ad-content" src="https://dummyimage.com/600x180/006bb3/ffffff.png&text=${type}" alt=""></div>
+      <div style="opacity: 0.5" class="ad ${type} ${cssClass}" id="${type}Ad"><img class="ad-content" src="https://dummyimage.com/600x100/006bb3/ffffff.png&text=${type}" alt=""></div>
 `
       }
       if (type == 'v1') {
@@ -111,12 +114,14 @@ jQuery(document).ready(function ($) {
       $('article').on('disappear', function (event, $all_appeared_elements) {
         $('#v1Ad').hide('slow')
       })
+      return true
     }
 
     /*
     * add behavior for the v2 ad template
     */
     function handleAdV2 () {
+      console.log('handle v2')
       $('body').prepend(getAdMarkup('v2', 'sticky-ad'))
       $v2Ad = $('#v2Ad')
 
@@ -141,6 +146,7 @@ jQuery(document).ready(function ($) {
         }, 30))
 
       })
+      return true
     }
 
     /*
@@ -148,33 +154,64 @@ jQuery(document).ready(function ($) {
     */
     function handleAdV3 () {
       $('article').prepend(getAdMarkup('v3'))
-      $('article .entry-content').css({display: 'inline-block'})
+      $('article .entry-content,article .entry-header').css({display: 'inline-block'})
       $v3Ad = $('#sidebarAd')
       $v3Ad.stickySidebar({
         topSpacing: 60,
         bottomSpacing: 60
       })
+      return true
     }
 
     switch (v) {
-      case '1' : {
-        handleAdV1()
+      case 1 : {
+        appended = handleAdV1()
         break
       }
-      case '2' : {
-        handleAdV2()
+      case 2 : {
+        appended = handleAdV2()
         break
       }
-      case '3' : {
-        handleAdV3()
+      case 3 : {
+        appended = handleAdV3()
         break
       }
     }
+    return appended
+  }
+
+  /**
+   * http://stackoverflow.com/a/10997390/11236
+   */
+  function updateURLParameter (url, param, paramVal) {
+    var newAdditionalURL = ''
+    var tempArray = url.split('?')
+    var baseURL = tempArray[0]
+    var additionalURL = tempArray[1]
+    var temp = ''
+    if (additionalURL) {
+      tempArray = additionalURL.split('&')
+      for (var i = 0; i < tempArray.length; i++) {
+        if (tempArray[i].split('=')[0] != param) {
+          newAdditionalURL += temp + tempArray[i]
+          temp = '&'
+        }
+      }
+    }
+
+    var rows_txt = temp + '' + param + '=' + paramVal
+    return baseURL + '?' + newAdditionalURL + rows_txt
   }
 
   // our code here
   const queryString = window.location.search
   const urlParams = new URLSearchParams(queryString)
-  appendFakeAds(urlParams.get('v'))
+  if (urlParams.get('v') > 0) {
+    appendFakeAds(urlParams.get('v') * 1)
+  } else {
+    let randomAd = Math.floor(Math.random() * 3) + 1
+    appendFakeAds(randomAd)
+    window.history.replaceState('', '', updateURLParameter(window.location.href, 'v', randomAd))
+  }
 
 })

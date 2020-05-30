@@ -1,0 +1,21 @@
+.btn{
+    padding: 0.5rem 1.2rem;
+    text-align: center;
+    color: white;
+    font-size: 0.7rem;
+    font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif;
+    font-weight: bold;
+}
+.btn:visited{
+    color:white;
+}
+.btn.btn-rounded {
+    border-radius: 50px;
+}
+
+.btn.btn__primary{
+    background-color: tomato;
+}
+.btn.btn__secondary{
+    background-color: grey;
+}
