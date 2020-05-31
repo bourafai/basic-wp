@@ -21,9 +21,8 @@ class Main {
 	}
 
 	public function admin_init() {
-		var_dump( is_plugin_active( 'advanced-custom-fields/acf.php' ) );
 
-		if ( is_admin() && current_user_can( 'activate_plugins' ) && ! is_plugin_active( 'advanced-custom-fields/acf.php' ) ) {
+		if ( is_admin() && current_user_can( 'activate_plugins' ) && ! is_plugin_active( 'advanced-custom-fields/acf.php' ) && ! is_plugin_active( 'advanced-custom-fields-pro/acf.php' ) ) {
 
 			add_action( 'admin_notices', [ $this, 'child_plugin_notice' ] );
 

@@ -140,7 +140,6 @@ bower_components/
 /wp/
 /salt.php
 
-content/uploads/
 content/blogs.dir/
 content/upgrade/
 content/backup-db/
