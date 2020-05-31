@@ -75,7 +75,7 @@ local.properties
 # PDT-specific
 .buildpath
 
-# sbteclipse plugin 
+# sbteclipse plugin
 .target
 
 # TeXlipse plugin
@@ -140,6 +140,7 @@ bower_components/
 /wp/
 /salt.php
 
+content/languages/
 content/blogs.dir/
 content/upgrade/
 content/backup-db/
@@ -411,4 +412,9 @@ content/plugins/advanced-custom-fields
 
 # BEGIN cms-tree-page-view #
 content/plugins/cms-tree-page-view
+# END cms-tree-page-view #
+
+
+# BEGIN cms-tree-page-view #
+content/themes/twentynineteen
 # END cms-tree-page-view #

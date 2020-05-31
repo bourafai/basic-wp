@@ -63,6 +63,7 @@
         "wpackagist-plugin/debug-bar-slow-actions": "*@stable",
         "wpackagist-plugin/rewrite-rules-inspector": "*@stable",
         "wpackagist-plugin/wp-email-debug": "*@stable",
+        "wpackagist-theme/twentynineteen":"1.5",
         "rarst/laps": "*@stable"
     },
     "suggest": {
