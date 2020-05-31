@@ -1,8 +1,0 @@
-name: basic-wp
-recipe: wordpress
-config:
-  webroot: .
-  php: '7.3'
-
-#env_file:
-#  - .env
