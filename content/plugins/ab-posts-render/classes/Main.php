@@ -61,6 +61,9 @@ class Main {
 	 * Load the plugin translation
 	 */
 	public function ab_init() {
+		//include ACF file
+		require_once AB_POSTS_RENDER_DIR . 'assets/acf/title-alternatives-fields.php';
+
 		// Load translations
 		load_plugin_textdomain( 'ab-posts-render', false, AB_POSTS_RENDER_PLUGIN_DIRNAME . '/languages' );
 
@@ -76,7 +79,9 @@ class Main {
 	function render_title() {
 		global $post;
 		$title_alternatives = get_field( 'alternative_titles' );
-
+		if ( ! $post ) {
+			return;
+		}
 		//set a default 'v' to the post
 		$_SESSION['navigation'][ $post->ID ]['v'] = empty( $_GET['v'] ) ? rand( 1, 3 ) : intval( $_GET['v'] );
 

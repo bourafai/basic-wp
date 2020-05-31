@@ -17,16 +17,8 @@ jQuery(document).ready(function ($) {
       if (type == 'v3') {
         return `
       <style>
-      .sticky-ad.sticky-ad_bottom {
-          top: unset;
-          bottom: 0px !important;
-      }
-      .sticky-ad {
-          position: fixed;
-          top: 0px;
-          z-index: 22;
-      }
       
+   
       .ad-content{
           text-align: center;
           background: #006bb3;
@@ -34,12 +26,14 @@ jQuery(document).ready(function ($) {
       }
       
       .sidebar{
+        z-index: 22;
         float: right;
         height:0px;
         width: 300px;
         color: #ce8888;
         position: relative;
         will-change: min-height;
+        opacity: 0.5;
       }
       
       .sidebar__inner{
@@ -64,8 +58,10 @@ jQuery(document).ready(function ($) {
       .sticky-ad.sticky-ad_bottom {
           top: unset;
           bottom: 0px !important;
+          
       }
       .sticky-ad {
+          opacity: 0.5;
           position: fixed;
           top: 0px;
           z-index: 22;
@@ -75,21 +71,13 @@ jQuery(document).ready(function ($) {
       }
       
       </style>
-      <div style="opacity: 0.5" class="ad ${type} ${cssClass}" id="${type}Ad"><img class="ad-content" src="https://dummyimage.com/600x100/006bb3/ffffff.png&text=${type}" alt=""></div>
+      <div class="ad ${type} ${cssClass}" id="${type}Ad"><img class="ad-content" src="https://dummyimage.com/600x100/006bb3/ffffff.png&text=${type}" alt=""></div>
 `
       }
       if (type == 'v1') {
         return `
       <style>
-      .sticky-ad.sticky-ad_bottom {
-          top: unset;
-          bottom: 0px !important;
-      }
-      .sticky-ad {
-          position: fixed;
-          top: 0px;
-          z-index: 22;
-      }
+      
       .ad-content{
           text-align: center;
           background: #006bb3;
@@ -106,7 +94,8 @@ jQuery(document).ready(function ($) {
     * add behavior for the v1 ad template
     */
     function handleAdV1 () {
-      $('.entry-content').prepend(getAdMarkup('v1'))
+      let appended = $('.entry-content').prepend(getAdMarkup('v1')).length === 0 ? false : true
+
       $('article').appear()
       $('article').on('appear', function (event, $all_appeared_elements) {
         $('#v1Ad').show('slow')
@@ -114,15 +103,15 @@ jQuery(document).ready(function ($) {
       $('article').on('disappear', function (event, $all_appeared_elements) {
         $('#v1Ad').hide('slow')
       })
-      return true
+
+      return appended
     }
 
     /*
     * add behavior for the v2 ad template
     */
     function handleAdV2 () {
-      console.log('handle v2')
-      $('body').prepend(getAdMarkup('v2', 'sticky-ad'))
+      let appended = $('body').prepend(getAdMarkup('v2', 'sticky-ad')).length === 0 ? false : true
       $v2Ad = $('#v2Ad')
 
       var currentScrollTop = 0
@@ -146,21 +135,22 @@ jQuery(document).ready(function ($) {
         }, 30))
 
       })
-      return true
+
+      return appended
     }
 
     /*
     * add behavior for the v3 ad template
     */
     function handleAdV3 () {
-      $('article').prepend(getAdMarkup('v3'))
+      let appended = $('article').prepend(getAdMarkup('v3')).length === 0 ? false : true
       $('article .entry-content,article .entry-header').css({display: 'inline-block'})
       $v3Ad = $('#sidebarAd')
       $v3Ad.stickySidebar({
         topSpacing: 60,
-        bottomSpacing: 60
+        bottomSpacing: 0
       })
-      return true
+      return appended
     }
 
     switch (v) {
@@ -177,6 +167,7 @@ jQuery(document).ready(function ($) {
         break
       }
     }
+
     return appended
   }
 
@@ -184,11 +175,11 @@ jQuery(document).ready(function ($) {
    * http://stackoverflow.com/a/10997390/11236
    */
   function updateURLParameter (url, param, paramVal) {
-    var newAdditionalURL = ''
-    var tempArray = url.split('?')
-    var baseURL = tempArray[0]
-    var additionalURL = tempArray[1]
-    var temp = ''
+    let newAdditionalURL = ''
+    let tempArray = url.split('?')
+    const baseURL = tempArray[0]
+    const additionalURL = tempArray[1]
+    let temp = ''
     if (additionalURL) {
       tempArray = additionalURL.split('&')
       for (var i = 0; i < tempArray.length; i++) {
@@ -199,19 +190,21 @@ jQuery(document).ready(function ($) {
       }
     }
 
-    var rows_txt = temp + '' + param + '=' + paramVal
+    const rows_txt = temp + '' + param + '=' + paramVal
     return baseURL + '?' + newAdditionalURL + rows_txt
   }
 
   // our code here
-  const queryString = window.location.search
-  const urlParams = new URLSearchParams(queryString)
-  if (urlParams.get('v') > 0) {
-    appendFakeAds(urlParams.get('v') * 1)
-  } else {
-    let randomAd = Math.floor(Math.random() * 3) + 1
-    appendFakeAds(randomAd)
-    window.history.replaceState('', '', updateURLParameter(window.location.href, 'v', randomAd))
+  if ($('body').hasClass('single-post')) {
+    const queryString = window.location.search
+    const urlParams = new URLSearchParams(queryString)
+    if (urlParams.get('v') > 0 && urlParams.get('v') <= 3) {
+      appendFakeAds(urlParams.get('v') * 1)
+    } else {
+      let randomAd = Math.floor(Math.random() * 3) + 1
+      appendFakeAds(randomAd)
+      window.history.replaceState('', '', updateURLParameter(window.location.href, 'v', randomAd))
+    }
   }
 
 })

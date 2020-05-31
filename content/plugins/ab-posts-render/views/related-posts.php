@@ -11,7 +11,6 @@ $the_query = new WP_Query( array(
 <?php
 // If we have posts lets show them
 if ( $the_query->have_posts() ) : ?>
-
     <div id="ab-related-posts" class="ab-related-posts" style="display: block;">
         <h3 class="ab-related-posts-headline"><?php echo esc_html( __( 'More like this', 'ab-posts-render' ) ); ?></h3>
         <div class="ab-related-posts-items ab-related-posts-items-visual">
@@ -23,7 +22,8 @@ if ( $the_query->have_posts() ) : ?>
                     <img class="ab-related-posts-post-img"
                          src="<?php echo esc_url( get_the_post_thumbnail_url( get_the_ID(), 'post-thumbnail' ) ); ?>">
                     <h6 class="ab-related-posts-post-title">
-                        <a class="ab-related-posts-post-a" href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"
+                        <a class="ab-related-posts-post-a" href="<?php the_permalink(); ?>"
+                           title="<?php the_title(); ?>"
                            data-origin="<?php echo esc_attr( $current_id ); ?>"><?php the_title(); ?></a>
                     </h6>
                 </div>
